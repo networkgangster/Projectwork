@@ -20,7 +20,7 @@ resource "exoscale_instance_pool" "projectwork_instancepool" {
   disk_size = 10
   user_data = file("userdata.sh")
   key_pair = ""
-  security_group_ids = [exoscale_security_group.sg.name]
+  security_group_ids = [exoscale_security_group.sg.id]
   zone = var.zone
  
 }

@@ -6,7 +6,7 @@ resource "exoscale_nlb" "projectwork_nlb" {
 
 resource "exoscale_nlb_service" "projectwork_nlb_service" {
   zone             = exoscale_nlb.projectwork_nlb.zone
-  name             = "sprint1-https"
+  name             = "projectwork-https"
   description      = "Website over HTTPS"
   nlb_id           = exoscale_nlb.projectwork_nlb.id
   instance_pool_id = exoscale_instance_pool.projectwork_instancepool.id

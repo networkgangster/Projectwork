@@ -22,5 +22,4 @@ resource "exoscale_instance_pool" "projectwork_instancepool" {
   key_pair = ""
   security_group_ids = [exoscale_security_group.sg.id]
   zone = var.zone
- 
 }

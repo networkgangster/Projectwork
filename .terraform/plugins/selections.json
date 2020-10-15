@@ -1,0 +1,6 @@
+{
+  "registry.terraform.io/terraform-providers/exoscale": {
+    "hash": "h1:wJkx7QB3tojttaNQY+iohnTxmfn7OcU7ZBYWuXu3J+I=",
+    "version": "0.20.0"
+  }
+}

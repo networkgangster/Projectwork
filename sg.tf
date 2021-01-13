@@ -25,3 +25,12 @@ resource "exoscale_security_group_rule" "HTTP" {
   start_port = 8080
   end_port = 8080
 }
+
+resource "exoscale_security_group_rule" "prometheus" {
+  security_group_id = exoscale_security_group.sg.id
+  type = "INGRESS"
+  protocol = "TCP"
+  cidr = "0.0.0.0/0"
+  start_port = 9090
+  end_port = 9090
+}

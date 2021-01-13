@@ -14,7 +14,7 @@ chmod a+rwx /srv/service-discovery/
 # Write Prometheus config
 cat <<EOCF >/srv/prometheus.yml
 global:
-  scrape_interval: 15s
+  scrape_interval: 30s
 scrape_configs:
   - job_name: 'prometheus'
     static_configs:
@@ -26,6 +26,13 @@ scrape_configs:
         refresh_interval: 10s
 EOCF
 
+#prometheus json
+cat <<EOCF >/srv/service-discovery/config.json
+[{"target":[],"labels":{}}]
+EOCF
+
+chmod a+rwx /srv/service-discovery/config.json
+
 # Create the network
 docker network create monitoring
 
@@ -35,9 +42,10 @@ docker run \
     --name sd \
     --network monitoring \
     -v /srv/service-discovery:/var/run/prometheus-sd-exoscale-instance-pools \
-    janoszen/prometheus-sd-exoscale-instance-pools:1.0.0 \
+    quay.io/janoszen/prometheus-sd-exoscale-instance-pools:1.0.0 \
     --exoscale-api-key ${exoscale_key} \
     --exoscale-api-secret ${exoscale_secret} \
+    --exoscale-zone-id ${exoscale_zone_id} \
     --instance-pool-id ${instance_pool_id}
 
 # Run Prometheus

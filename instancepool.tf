@@ -16,7 +16,7 @@ resource "exoscale_instance_pool" "projectwork_instancepool" {
   description = "test"
   template_id = data.exoscale_compute_template.instancepool.id
   service_offering = "micro"
-  size = 3
+  size = 1
   disk_size = 10
   user_data = file("userdata.sh")
   key_pair = exoscale_ssh_keypair.ssh_keypair.id

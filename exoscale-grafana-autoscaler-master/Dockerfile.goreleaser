@@ -1,0 +1,7 @@
+FROM alpine
+COPY exoscale-grafana-autoscaler /
+COPY LICENSE /
+ENTRYPOINT ["/exoscale-grafana-autoscaler"]
+CMD ["-h"]
+USER 1022:1022
+EXPOSE 8090

@@ -1,15 +1,17 @@
 #!/bin/bash
 
-# Abort on all errors
+# Stop if error occurs
 set -e
 
-#This is not production grade, but for the sake of brevity we are using it like this.
+# source: https://fh-cloud-computing.github.io/exercises/3-containers/
+# Install docker
 curl -fsSL https://get.docker.com -o get-docker.sh
 sh get-docker.sh
 
 # Create shared directory for service discovery config
 mkdir -p /srv/service-discovery/
 chmod a+rwx /srv/service-discovery/
+
 
 # Write Prometheus config
 cat <<EOCF >/srv/prometheus.yml
@@ -26,17 +28,18 @@ scrape_configs:
         refresh_interval: 10s
 EOCF
 
-#write prometheus json
+# write service discovery config
 cat <<EOCF >/srv/service-discovery/config.json
 [{"target":[],"labels":{}}]
 EOCF
 
 chmod a+rwx /srv/service-discovery/config.json
 
-# Create shared directory for grafana config
+# Create shared directory for grafana datasources
 mkdir -p /srv/grafana/provisioning/datasources/
 chmod a+rwx /srv/grafana/provisioning/datasources/
 
+# source: https://fh-cloud-computing.github.io/exercises/5-grafana/
 # write data source config
 cat <<EOCF >/srv/grafana/provisioning/datasources/prom.yml
 apiVersion: 1
@@ -54,6 +57,7 @@ EOCF
 mkdir -p /srv/grafana/provisioning/notifiers/
 chmod a+rwx /srv/grafana/provisioning/notifiers/
 
+#source: https://fh-cloud-computing.github.io/exercises/5-grafana/
 # write notifier config
 cat <<EOCF >/srv/grafana/provisioning/notifiers/notifiers.yml
 notifiers:
@@ -87,11 +91,12 @@ notifiers:
       url: "http://autoscaler:8090/down"
 EOCF
 
-# Create shared directory for grafana dashboard
+# Create shared directory for grafana dashboard config
 mkdir -p /srv/grafana/provisioning/dashboards/
 chmod a+rwx /srv/grafana/provisioning/dashboards/
 
-# write dashboard yaml
+# source: https://fh-cloud-computing.github.io/exercises/5-grafana/
+# write dashboard config
 cat <<EOCF >/srv/grafana/provisioning/dashboards/dashboard.yml
 apiVersion: 1
 
@@ -105,7 +110,7 @@ providers:
     path: /etc/grafana/dashboards
 EOCF
 
-# Create shared directory for grafana config
+# Create shared directory for grafana dashboard
 mkdir -p /srv/grafana/dashboards/
 chmod a+rwx /srv/grafana/dashboards/
 
@@ -443,6 +448,7 @@ EOCF
 # Create the network
 docker network create monitoring
 
+# source: https://github.com/FH-Cloud-Computing/sprint-2/
 # Run service discovery agent
 docker run \
     -d \
@@ -455,6 +461,7 @@ docker run \
     --exoscale-zone-id ${exoscale_zone_id} \
     --instance-pool-id ${instance_pool_id}
 
+# source: https://github.com/FH-Cloud-Computing/sprint-2/
 # Run Prometheus
 docker run -d \
     -p 9090:9090 \
@@ -475,6 +482,7 @@ docker run -d \
     -v /srv/grafana/dashboards/dashboard.json:/etc/grafana/dashboards/dashboard.json \
     grafana/grafana
 
+# source: https://github.com/janoszen/exoscale-grafana-autoscaler
 # Run autoscaler
 sudo docker run -d \
     -p 8090:8090 \

@@ -3,6 +3,7 @@
 apt update
 apt install -y nginx
 
+# Stop if error occurs
 set -e
 
 export DEBIAN_FRONTEND=noninteractive
